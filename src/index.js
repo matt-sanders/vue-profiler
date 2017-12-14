@@ -30,7 +30,7 @@ const Profiler = {
 	Utils.profile(this, 'Destroyed');
       },
       destroyed(){
-	Utils.profile(this, 'Destroyed');
+	Utils.endProfile(this, 'Destroyed');
       }
     });
   }
