@@ -29,10 +29,12 @@ function toUpper (_, c) {
  * @param {string} ext The extension to remove
  */
 function basename (filename, ext) {
-  return path.basename(
-    filename.replace(/^[a-zA-Z]:/, '').replace(/\\/g, '/'),
-    ext
-  );
+  let base = new String(filename).substring(filename.lastIndexOf('/') + 1); 
+  if(base.lastIndexOf(".") != -1)       
+    base = base.substring(0, base.lastIndexOf("."));
+
+  if ( ext ) base = base.replace(ext, '');
+  return base;
 }
 
 /**
