@@ -1,14 +1,14 @@
 import * as Utils from './utils';
 
-const supportsUserTiming =
-  typeof performance !== 'undefined' &&
-  typeof performance.mark === 'function' &&
-  typeof performance.clearMarks === 'function' &&
-  typeof performance.measure === 'function' &&
-  typeof performance.clearMeasures === 'function';
-
 const Profiler = {
   install(Vue, options){
+    const supportsUserTiming =
+    typeof performance !== 'undefined' &&
+    typeof performance.mark === 'function' &&
+    typeof performance.clearMarks === 'function' &&
+    typeof performance.measure === 'function' &&
+    typeof performance.clearMeasures === 'function';
+    
     // do nothing if profiling isn't supported
     if ( !supportsUserTiming ) return;
 
