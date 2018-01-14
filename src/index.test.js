@@ -6,6 +6,7 @@ window.performance = new Perf();
 
 const component = {
   template: '<div>{{count}}</div>',
+  name: 'Comp',
   data(){
     return {
       count: 0
@@ -23,25 +24,28 @@ describe('User Timing', () => {
 
   describe('Lifecycle Hooks', () => {
     const cp = mount(component, { localVue });
+
+    function expectEntries(names){
+      names.forEach(name => {
+	expect(performance.getEntriesByName(name).length).not.toBe(0);
+      });
+    }
     
     it('mounted', () => {
-      expect(performance.getEntriesByName('0_Mounted').length).not.toBe(0);
-      expect(performance.getEntriesByName('0_MountedEnd').length).not.toBe(0);
+      expectEntries(['0_Mounted', '0_MountedEnd', 'Comp Mounted']);
     });
 
     it('updated', done => {
       cp.setData({ count: 1 });
       setTimeout( () => {
-	expect(performance.getEntriesByName('0_Updated').length).not.toBe(0);
-	expect(performance.getEntriesByName('0_UpdatedEnd').length).not.toBe(0);
+	expectEntries(['0_Updated', '0_UpdatedEnd', 'Comp Updated']);
 	done();
       });
     });
 
     it('destroyed', () => {
       cp.destroy();
-      expect(performance.getEntriesByName('0_Destroyed').length).not.toBe(0);
-      expect(performance.getEntriesByName('0_DestroyedEnd').length).not.toBe(0);
+      expectEntries(['0_Destroyed', '0_DestroyedEnd', 'Comp Destroyed']);
     });
     
   });
