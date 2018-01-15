@@ -6,7 +6,6 @@ window.performance = new Perf();
 
 const component = {
   template: '<div>{{count}}</div>',
-  name: 'Comp',
   data(){
     return {
       count: 0
@@ -14,22 +13,39 @@ const component = {
   }
 };
 
+const namedComponent = {
+    ...component,
+  name: 'Comp'
+};
+
 const localVue = createLocalVue();
 localVue.use(Profiler);
+
+function expectEntries(names){
+  names.forEach(name => {
+    expect(performance.getEntriesByName(name).length).not.toBe(0);
+  });
+}
 
 describe('User Timing', () => {
   it('performance exists', () => {
     expect(performance).not.toBe(undefined);
   });
 
-  describe('Lifecycle Hooks', () => {
-    const cp = mount(component, { localVue });
+  describe('Component Names', () => {
+    it('has defaults', () => {
+      const cp = mount(component, { localVue });
+      expectEntries(['Root Mounted']);
+    });
 
-    function expectEntries(names){
-      names.forEach(name => {
-	expect(performance.getEntriesByName(name).length).not.toBe(0);
-      });
-    }
+    it('takes a name', () => {
+      const cp = mount(namedComponent, { localVue });
+      expectEntries(['Comp Mounted']);
+    });
+  });
+
+  describe('Lifecycle Hooks', () => {
+    const cp = mount(namedComponent, { localVue });
     
     it('mounted', () => {
       expectEntries(['0_Mounted', '0_MountedEnd', 'Comp Mounted']);
